@@ -7,4 +7,4 @@ const loginsSchema = new mongoose.Schema({
   user_id: String,
 });
 
-export const Logins = mongoose.model("logins", loginsSchema);
+module.exports = mongoose.model("logins", loginsSchema);

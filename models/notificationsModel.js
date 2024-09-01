@@ -12,7 +12,4 @@ const notificationsSchema = new mongoose.Schema({
   ],
 });
 
-export const Notifications = mongoose.model(
-  "notiications",
-  notificationsSchema
-);
+module.exports = mongoose.model("notiications", notificationsSchema);

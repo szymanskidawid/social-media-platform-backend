@@ -11,4 +11,4 @@ const postsSchema = new mongoose.Schema({
   post_likes: [String],
 });
 
-export const Posts = mongoose.model("posts", postsSchema);
+module.exports = mongoose.model("posts", postsSchema);
