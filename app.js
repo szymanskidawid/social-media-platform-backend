@@ -22,6 +22,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the Social Media Platform API!");
+});
+
 app.use("/chats", chatsRoutes);
 app.use("/comments", commentsRoutes);
 app.use("/logins", loginsRoutes);
