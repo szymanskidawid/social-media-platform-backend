@@ -3,6 +3,13 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const chatsRoutes = require("./routes/chatsRoutes");
+const commentsRoutes = require("./routes/commentsRoutes");
+const loginsRoutes = require("./routes/loginsRoutes");
+const notificationsRoutes = require("./routes/notificationsRoutes");
+const peopleRoutes = require("./routes/peopleRoutes");
+const postsRoutes = require("./routes/postsRoutes");
+
 const app = express();
 
 app.use(express.json());
@@ -15,11 +22,15 @@ app.use(
   })
 );
 
+app.use("/chats", chatsRoutes);
+app.use("/comments", commentsRoutes);
+app.use("/logins", loginsRoutes);
+app.use("/notifications", notificationsRoutes);
+app.use("/people", peopleRoutes);
+app.use("/posts", postsRoutes);
+
 mongoose
-  .connect(process.env.MONGODB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB)
   .then(() => {
     console.log("Connection to MongoDB successful");
   })
