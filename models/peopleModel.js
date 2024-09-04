@@ -22,4 +22,4 @@ const peopleSchema = new mongoose.Schema({
   chats: { String },
 });
 
-module.exports = mongoose.model("people", peopleSchema);
+module.exports = mongoose.model("people", peopleSchema, "people");
