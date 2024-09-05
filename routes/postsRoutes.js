@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
     console.log(data);
     res.json(data);
   } catch (error) {
-    console.log("Cannot fetch posts: ", error);
+    console.error("Cannot fetch posts: ", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

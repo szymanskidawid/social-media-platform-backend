@@ -39,7 +39,7 @@ mongoose
     console.log("Connection to MongoDB successful");
   })
   .catch((error) => {
-    console.log("Error connecting to MongoDB: ", error);
+    console.error("Error connecting to MongoDB: ", error);
   });
 
 const PORT = process.env.PORT || 4000;
