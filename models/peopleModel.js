@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
 const peopleSchema = new mongoose.Schema({
-  //_id: String,
-  //user_id: String,
+  _id: String,
   name: String,
   surname: String,
   full_name: String,
@@ -17,9 +16,9 @@ const peopleSchema = new mongoose.Schema({
       url: String,
     },
   ],
-  friends: [String],
-  posts: [String],
-  chats: { String },
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "people" }],
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "posts" }],
+  chats: [{ type: mongoose.Schema.Types.ObjectId, ref: "chats" }],
 });
 
 module.exports = mongoose.model("people", peopleSchema, "people");
