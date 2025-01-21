@@ -14,6 +14,33 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ error: "Required fields are missing." });
+  }
+
+  try {
+    const user = await Logins.findOne({ email });
+
+    if (!user) {
+      res.status(401).jsom({ error: "Invalid email or password" });
+    }
+
+    if (password !== user.password) {
+      res.status(401).jsom({ error: "Invalid email or password" });
+    }
+
+    res.status(200).json(user);
+  } catch {
+    console.error("Error while logging in: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.post("/create", async (req, res) => {
   const { email, password } = req.body;
 
