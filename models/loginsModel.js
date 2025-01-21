@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
 const loginsSchema = new mongoose.Schema({
-  _id: String,
-  email: String,
-  password: String,
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "people" },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  first_login: Boolean,
 });
 
 module.exports = mongoose.model("logins", loginsSchema);

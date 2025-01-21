@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const peopleSchema = new mongoose.Schema({
-  _id: String,
+  login_id: { type: mongoose.Schema.Types.ObjectId, ref: "logins" },
   name: String,
   surname: String,
   full_name: String,

@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const postsSchema = new mongoose.Schema({
-  _id: String,
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: "people" },
   time_posted: String,
   post_message: String,

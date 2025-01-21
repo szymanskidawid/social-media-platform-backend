@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const commentsSchema = new mongoose.Schema({
-  _id: String,
   comments: [
     {
       comment_id: String,
