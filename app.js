@@ -22,6 +22,10 @@ app.use(
   })
 );
 
+app.use((req, res) => {
+  res.status(404).json({ error: "Not Found" });
+});
+
 app.get("/", (req, res) => {
   res.send("Welcome to the Social Media Platform API!");
 });
