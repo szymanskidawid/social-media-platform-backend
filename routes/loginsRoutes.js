@@ -16,11 +16,11 @@ router.post("/", async (req, res) => {
     const user = await Logins.findOne({ email });
 
     if (!user) {
-      res.status(401).jsom({ error: "Invalid email or password" });
+      res.status(401).json({ error: "Invalid email or password" });
     }
 
     if (password !== user.password) {
-      res.status(401).jsom({ error: "Invalid email or password" });
+      res.status(401).json({ error: "Invalid email or password" });
     }
 
     res.status(200).json(user);
@@ -40,6 +40,12 @@ router.post("/create", async (req, res) => {
   }
 
   try {
+    const existingAccount = await Logins.findOne({ email });
+
+    if (existingAccount) {
+      return res.status(400).json({ error: "Email already used" });
+    }
+
     const newAccount = new Logins({ email, password });
 
     await newAccount.save();
