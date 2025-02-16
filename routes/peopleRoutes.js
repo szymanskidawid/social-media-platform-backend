@@ -16,13 +16,14 @@ router.get("/", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const {
+    loginId,
     name,
     surname,
-    town = "",
-    school = "",
-    work = "",
+    town,
+    school,
+    work,
     background_photo = "",
-    profile_photo = "",
+    profile_photo,
   } = req.body;
 
   if (!name || !surname) {
@@ -31,6 +32,7 @@ router.post("/create", async (req, res) => {
 
   try {
     const person = new People({
+      loginId,
       name,
       surname,
       full_name: name + " " + surname,
@@ -137,12 +139,10 @@ router.put("/update/:id", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "User updated successfully",
-        user: updatedUser,
-      });
+    res.status(200).json({
+      message: "User updated successfully",
+      user: updatedUser,
+    });
   } catch (error) {
     console.error("Error while updating user profile: ", error);
     re.status(500).json({ error: "Internal server error" });
