@@ -1,5 +1,6 @@
 const express = require("express");
 const People = require("../models/peopleModel");
+const { default: mongoose } = require("mongoose");
 
 const router = express.Router();
 
@@ -31,8 +32,10 @@ router.post("/create", async (req, res) => {
   }
 
   try {
+    const objectId = new mongoose.Types.ObjectId(loginId);
+
     const person = new People({
-      loginId,
+      login_id: objectId,
       name,
       surname,
       full_name: name + " " + surname,
