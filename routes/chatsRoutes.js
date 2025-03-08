@@ -14,4 +14,10 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.post("/add", async (req, res) => {});
+
+router.put("/update", async (req, res) => {});
+
+router.delete("/delete", async (req, res) => {});
+
 module.exports = router;
