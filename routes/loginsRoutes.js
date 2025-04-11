@@ -17,11 +17,15 @@ router.post("/", async (req, res) => {
     const user = await Logins.findOne({ email });
 
     if (!user) {
-      res.status(401).json({ error: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ error: "Invalid email or password" });
     }
 
     if (password !== user.password) {
-      res.status(401).json({ error: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ error: "Invalid email or password" });
     }
 
     res.status(200).json(user);
@@ -57,8 +61,8 @@ router.post("/create", async (req, res) => {
   }
 });
 
-router.put("/update", async (req, res) => {
-  const { loginId, /*pswrd,*/ firstLogin } = req.body;
+router.put("/updateFirstLogin", async (req, res) => {
+  const { loginId, firstLogin } = req.body;
 
   try {
     const objectId = new mongoose.Types.ObjectId(loginId);
@@ -68,10 +72,6 @@ router.put("/update", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    /*if (pswrd !== "") {
-      user.password = pswrd;
-    }*/
-
     if (typeof firstLogin === "boolean") {
       user.first_login = firstLogin;
     }
@@ -80,9 +80,31 @@ router.put("/update", async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Login details updated succesfully" });
+      .json({ message: "First Login variable updated succesfully" });
   } catch (error) {
-    console.error("Cannot update login details: ", error);
+    console.error("Cannot update first login: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.put("/changePassword", async (req, res) => {
+  const { loginId, oldPassword, newPassword } = req.body;
+
+  try {
+    const objectId = new mongoose.Types.ObjectId(loginId);
+    const user = await Logins.findById(objectId);
+
+    if (oldPassword !== user.password) {
+      return res.status(401).json({ error: "Incorrect password" });
+    }
+
+    user.password = newPassword;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password updated succesfully" });
+  } catch (error) {
+    console.error("Cannot update password: ", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
