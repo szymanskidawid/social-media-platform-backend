@@ -51,17 +51,39 @@ router.post("/create", async (req, res) => {
 
     const savedPerson = await person.save();
 
-    res.status(201).json(savedPerson);
+    res.status(200).json(savedPerson);
   } catch (error) {
     console.error("Error while creating a new person: ", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.post("/add-photo", async (req, res) => {});
+router.put("/update/:id", async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
 
-router.post("/add-friend", async (req, res) => {});
+  try {
+    const profile = await People.findById(id);
 
-router.put("/update/:id", async (req, res) => {});
+    Object.entries(updates).forEach(([key, value]) => {
+      profile[key] = value;
+    });
+
+    if (updates.name || updates.surname) {
+      profile.full_name = profile.name + " " + profile.surname;
+    }
+
+    const savedProfile = await profile.save();
+
+    res.status(201).json(savedProfile);
+  } catch (error) {
+    console.error("Cannot update profile", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.put("/add-friend", async (req, res) => {});
+
+router.delete("/remove-friend", async (req, res) => {});
 
 module.exports = router;
