@@ -77,13 +77,93 @@ router.put("/update/:id", async (req, res) => {
 
     res.status(201).json(savedProfile);
   } catch (error) {
-    console.error("Cannot update profile", error);
+    console.error("Cannot update profile: ", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.put("/add-friend", async (req, res) => {});
+router.put("/add-friend", async (req, res) => {
+  const { userId, friendId } = req.body;
 
-router.delete("/remove-friend", async (req, res) => {});
+  if (!userId || !friendId) {
+    return res
+      .status(400)
+      .json({ error: "userId and friendId are required" });
+  }
+
+  if (userId === friendId) {
+    return res
+      .status(400)
+      .json({ error: "Cannot add yourself as a friend" });
+  }
+
+  try {
+    const user = await People.findById(userId);
+    const friend = await People.findById(friendId);
+
+    if (!user || !friend) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.friends.includes(friendId)) {
+      return res.status(400).json({ error: "Already friends" });
+    }
+
+    user.friends.push(friendId);
+    friend.friends.push(userId);
+
+    await user.save();
+    await friend.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Cannot accept friend request: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.delete("/remove-friend", async (req, res) => {
+  const { userId, friendId } = req.body;
+
+  if (!userId || !friendId) {
+    return res
+      .status(400)
+      .json({ error: "userId and friendId are required" });
+  }
+
+  if (userId === friendId) {
+    return res
+      .status(400)
+      .json({ error: "Cannot remove yourself as a friend" });
+  }
+
+  try {
+    const user = await People.findById(userId);
+    const friend = await People.findById(friendId);
+
+    if (!user || !friend) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (!user.friends.includes(friendId)) {
+      return res.status(400).json({ error: "Not friends!" });
+    }
+
+    user.friends = user.friends.filter(
+      (id) => id.toString() !== friendId
+    );
+    friend.friends = friend.friends.filter(
+      (id) => id.toString() !== userId
+    );
+
+    await user.save();
+    await friend.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Cannot remove friend: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = router;
