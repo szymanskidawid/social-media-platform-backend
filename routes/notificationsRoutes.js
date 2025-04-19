@@ -36,6 +36,32 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.delete("/remove", async (req, res) => {});
+router.delete("/remove/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Missing notification id" });
+  }
+
+  try {
+    const deletedNotification = await Notifications.findByIdAndDelete(
+      id
+    );
+
+    if (!deletedNotification) {
+      return res
+        .status(404)
+        .json({ error: "Notification not found" });
+    }
+
+    res.status(200).json({
+      message: "Notification deleted successfully",
+      deletedNotification,
+    });
+  } catch (error) {
+    console.error("Cannot remove notification: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = router;
