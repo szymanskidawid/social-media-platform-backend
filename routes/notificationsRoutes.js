@@ -20,7 +20,8 @@ router.post("/add", async (req, res) => {
   if (
     !req.body.user_id ||
     !req.body.notified_user_id ||
-    !req.body.type
+    !req.body.type ||
+    !req.body.time_sent
   ) {
     return res.status(400).json({ error: "Missing required fields" });
   }

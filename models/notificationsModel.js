@@ -11,6 +11,7 @@ const notificationsSchema = new mongoose.Schema({
     ref: "people",
   },
   type: String,
+  time_sent: String,
 });
 
 module.exports = mongoose.model("notifications", notificationsSchema);
