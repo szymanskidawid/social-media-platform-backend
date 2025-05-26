@@ -1,5 +1,8 @@
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 const cors = require("cors");
+const setupSocketEvents = require("./sockets");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
@@ -11,16 +14,17 @@ const peopleRoutes = require("./routes/peopleRoutes");
 const postsRoutes = require("./routes/postsRoutes");
 
 const app = express();
-
-app.use(express.json());
-
-app.use(
-  cors({
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
     origin: "*",
     methods: "*",
     allowedHeaders: "*",
-  })
-);
+  }
+});
+
+app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Social Media Platform API!");
@@ -37,6 +41,16 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
 
+io.on("connection", (socket) => {
+  console.log("New client connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  })
+})
+
+setupSocketEvents(io);
+
 mongoose
   .connect(process.env.MONGODB)
   .then(() => {
@@ -48,6 +62,6 @@ mongoose
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
