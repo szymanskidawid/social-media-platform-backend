@@ -1,5 +1,6 @@
 const express = require("express");
 const Notifications = require("../models/notificationsModel");
+const notificationEvents = require("../events/notificationsEvents");
 
 const router = express.Router();
 
@@ -29,6 +30,8 @@ router.post("/add", async (req, res) => {
   try {
     const newNotification = new Notifications(newNotificationData);
     await newNotification.save();
+
+    notificationEvents.emit("notificationAdded", newNotification);
 
     res.status(201).json(newNotification);
   } catch (error) {

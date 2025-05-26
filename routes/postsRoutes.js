@@ -1,5 +1,6 @@
 const express = require("express");
 const Posts = require("../models/postsModel");
+const postsEvents = require("../events/postsEvents");
 const { default: mongoose } = require("mongoose");
 
 const router = express.Router();
@@ -28,9 +29,11 @@ router.post("/add", async (req, res) => {
       post_photo,
     });
 
-    const savedPost = await post.save();
+    const newPost = await post.save();
 
-    res.status(201).json(savedPost);
+    postsEvents.emit("postAdded", newPost);
+
+    res.status(201).json(newPost);
   } catch (error) {
     console.error("Error while creating a new post: ", error);
     res.status(500).json({ error: "Internal server error" });
